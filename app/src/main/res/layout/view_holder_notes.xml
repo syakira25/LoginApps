@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_assignment_grey_24dp"
         android:layout_alignParentLeft="true" />
+        <!--android:src="@drawable/ic_assignment_grey_24dp"-->
 
     <TextView
         android:id="@+id/tv_title"
@@ -29,17 +29,15 @@
 
     <TextView
         android:id="@+id/tv_agency"
+        style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is a agency"
+        android:layout_alignStart="@+id/tv_title"
+        android:layout_below="@+id/tv_title"
         android:ellipsize="end"
-        style="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_alignTop="@id/iv_icon"
-        android:layout_toEndOf="@id/iv_icon"
-        android:paddingStart="@dimen/standard_separator"
         android:paddingEnd="@dimen/standard_separator"
-        android:layout_toRightOf="@id/iv_icon"
-        android:layout_below="@id/tv_title"/>
+        android:paddingStart="@dimen/standard_separator"
+        android:text="This is a agency" />
 
     <TextView
         android:id="@+id/tv_description"
@@ -49,9 +47,9 @@
         android:text="Description"
         style="@style/TextAppearance.AppCompat.Caption"
         android:layout_toEndOf="@id/iv_icon"
-        android:layout_below="@id/tv_agency"
         android:paddingStart="@dimen/standard_separator"
         android:paddingEnd="@dimen/standard_separator"
-        android:layout_toRightOf="@id/iv_icon" />
+        android:layout_toRightOf="@id/iv_icon"
+        android:layout_below="@id/tv_agency"/>
 
 </RelativeLayout>

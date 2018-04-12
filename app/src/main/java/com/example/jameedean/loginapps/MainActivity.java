@@ -1,6 +1,7 @@
 package com.example.jameedean.loginapps;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.jameedean.loginapps.adapter.NotesAdapter;
 import com.example.jameedean.loginapps.data.Reference;
@@ -20,7 +22,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -29,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
     private NotesAdapter mAdapter;
 
     private final static int NOTE_ADD = 1000;
+
+    private ImageView imageView;
+
+    //uri to store file
+    private Uri filePath;
+
+    //firebase objects
+    private StorageReference storageReference;
 
     private DatabaseReference mNotesReference;
 

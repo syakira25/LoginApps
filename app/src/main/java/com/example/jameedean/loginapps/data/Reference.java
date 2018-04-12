@@ -15,4 +15,5 @@ public class Reference {
 
     // request code
     public final static int RC_GOOGLE_SIGN_IN = 1000;
+
 }

@@ -53,7 +53,6 @@ public class AgencyAdapter extends RecyclerView.Adapter<AgencyAdapter.AgencyView
 
     public void addData(AgencyModel model) {
         mData.add(model);
-
         notifyDataSetChanged();
     }
 
