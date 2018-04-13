@@ -78,7 +78,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         private TextView title, agency;
         private TextView description;
-        private ImageView imageView;
+        private ImageView imageView,drawView;
 
         NoteViewHolder(View itemView) {
             super(itemView);
@@ -87,7 +87,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             agency = itemView.findViewById(R.id.tv_agency);
             //imageView = itemView.findViewById(R.id.cameraImg);
             description = itemView.findViewById(R.id.tv_description);
-            imageView =itemView.findViewById(R.id.iv_draw);
+            drawView =itemView.findViewById(R.id.iv_draw);
 
             itemView.setOnClickListener(this);
         }
