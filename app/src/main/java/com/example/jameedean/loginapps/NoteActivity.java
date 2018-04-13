@@ -475,7 +475,6 @@ public class NoteActivity extends AppCompatActivity {
                 simpleSpinner.getSelectedItem().toString(),
                 mTVDescription.getText().toString(),
                 imageUrl,
-                "",
                 System.currentTimeMillis()
         );
 

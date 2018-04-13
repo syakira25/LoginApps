@@ -16,12 +16,11 @@ public class NoteModel {
 
     public NoteModel() {}
 
-    public NoteModel(String title, String agency, String description, String imageUrl, String drawUrl, long createdAt) {
+    public NoteModel(String title, String agency, String description, String imageUrl,long createdAt) {
         this.title = title;
         this.agency = agency;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.pictureUrl = drawUrl;
         this.createdAt = createdAt;
     }
 
