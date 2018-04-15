@@ -84,7 +84,7 @@ public class NoteActivity extends AppCompatActivity {
     private Bitmap mCameraImg;
     private Bitmap mDrawImg;
 
-    private boolean mHaveDrawing;
+    private boolean mHaveDrawing,mHaveImage;
 
     private String mId;
     Spinner simpleSpinner;
@@ -162,7 +162,11 @@ public class NoteActivity extends AppCompatActivity {
                             if (!mCurrentNoteModel.getImageUrl().isEmpty()) {
                                 Picasso.with(getApplicationContext()).load(mCurrentNoteModel.getImageUrl()).into(drawView);
                                 mHaveDrawing = true;
+                            }else if (!mCurrentNoteModel.getPictureUrl().isEmpty()){
+                                Picasso.with(getApplicationContext()).load(mCurrentNoteModel.getPictureUrl()).into(imageView);
+                                mHaveImage=true;
                             }
+
                         }
                     }
 
@@ -297,9 +301,9 @@ public class NoteActivity extends AppCompatActivity {
             emailIntent.setType("plain/text");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{agency});
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-            if (mImageUri != null) {
+            /*if (mImageUri != null) {
                 emailIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
-            }
+            }*/
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, description);
             this.startActivity(Intent.createChooser(emailIntent, "Sending email..."));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -392,6 +396,7 @@ public class NoteActivity extends AppCompatActivity {
             switch (requestCode) {
                 case CAMERA_REQUEST_CODE:
                     getImageFromCamera(data);
+                    mHaveImage=true;
                     break;
                 case SIGNATURE_REQUEST_CODE:
                     byte[] bytes = data.getByteArrayExtra("sign_image");
@@ -400,8 +405,9 @@ public class NoteActivity extends AppCompatActivity {
                         drawView.setImageBitmap(mDrawImg);
                     }
 
-                    mHaveDrawing = true;
+                mHaveDrawing = true;
                     break;
+
             }
         }
     }
@@ -432,6 +438,20 @@ public class NoteActivity extends AppCompatActivity {
      * Trigger save button
      */
     private void save() {
+
+                // SIGNATURE
+                if (mDrawImg != null) {
+                    uploadDrawing();
+                }
+
+                // PICTURE
+               else if (mCameraImg != null){
+                   uploadImage();
+                }
+    }
+
+
+    private void uploadDrawing() {
 
         if (!mHaveDrawing) {
             saveToDB("");
@@ -464,6 +484,39 @@ public class NoteActivity extends AppCompatActivity {
         }
     }
 
+    private void uploadImage(){
+
+        if (!mHaveImage) {
+            savetoDB("");
+        } else {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            mCameraImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            OnSuccessListener successListener = new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    savetoDB(taskSnapshot.getDownloadUrl().toString());
+
+                }
+            };
+            OnFailureListener failureListener = new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            mStorage
+                    .getReference("reference")
+                    .child(System.currentTimeMillis() + ".jpg")
+                    .putBytes(data)
+                    .addOnSuccessListener(successListener)
+                    .addOnFailureListener(failureListener);
+        }
+
+    }
+
     /***
      * Save to Database
      * @param imageUrl
@@ -493,54 +546,34 @@ public class NoteActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+    }
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    mCameraImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-    byte[] data = baos.toByteArray();
+    private void savetoDB(String drawUrl){
 
-    OnSuccessListener successListener = new OnSuccessListener<UploadTask.TaskSnapshot>() {
-        @Override
-        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        NoteModel model = new NoteModel(
+                mTVTitle.getText().toString(),
+                simpleSpinner.getSelectedItem().toString(),
+                mTVDescription.getText().toString(),
+                "",
+                drawUrl,
+                System.currentTimeMillis()
+        );
 
-            NoteModel model = new NoteModel(
-                    mTVTitle.getText().toString(),
-                    simpleSpinner.getSelectedItem().toString(),
-                    mTVDescription.getText().toString(),
-                    taskSnapshot.getDownloadUrl().toString(),
-                    System.currentTimeMillis()
-            );
-
-            if(mId == null) {
-                // generate id
-                mId = mNoteReference.push().getKey();
-            }
-
-            mNoteReference
-                    .child(mId)
-                    .setValue(model)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(NoteActivity.this, "Note saved", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-
+        if (mId == null) {
+            // generate id
+            mId = mNoteReference.push().getKey();
         }
-    };
-    OnFailureListener failureListener = new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            Toast.makeText(getBaseContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
-    };
 
-        mStorage
-                .getReference("reference")
-                .child(System.currentTimeMillis() + ".jpg")
-            .putBytes(data)
-                .addOnSuccessListener(successListener)
-                .addOnFailureListener(failureListener);
+        mNoteReference.child(mId)
+                .setValue(model)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(NoteActivity.this, "Note saved", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+
     }
 }
 
