@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.jameedean.loginapps.SignatureActivity">
+
+    <kivaaz.com.signaturelibrary.Signature.Signature.SignatureView
+        android:id="@+id/signatureview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <!--android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_cancel"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_cancel_white_24dp"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:scaleType="center"/-->
+
+        <Button
+            android:id="@+id/bt_send"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_description"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="30dp"
+            android:text="Send" />
+    </LinearLayout>
+
+</RelativeLayout>
