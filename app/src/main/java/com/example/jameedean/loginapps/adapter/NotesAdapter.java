@@ -85,7 +85,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
             title = itemView.findViewById(R.id.tv_title);
             agency = itemView.findViewById(R.id.tv_agency);
-            //imageView = itemView.findViewById(R.id.cameraImg);
+            imageView = itemView.findViewById(R.id.cameraImg);
             description = itemView.findViewById(R.id.tv_description);
             drawView =itemView.findViewById(R.id.iv_draw);
 
