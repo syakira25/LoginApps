@@ -11,17 +11,24 @@ public class NoteModel {
     private String title, agency;
     private String description;
     private String imageUrl;
-    private String pictureUrl;
+    private String drawingUrl;
     private long createdAt;
 
     public NoteModel() {}
+
+    public NoteModel(String title, String agency, String description, long createdAt) {
+        this.title = title;
+        this.agency = agency;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
 
     public NoteModel(String title, String agency, String description, String imageUrl, String drawUrl, long createdAt) {
         this.title = title;
         this.agency = agency;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.pictureUrl = drawUrl;
+        this.drawingUrl = drawUrl;
         this.createdAt = createdAt;
     }
 
@@ -53,10 +60,12 @@ public class NoteModel {
 
     public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
 
-    public String getPictureUrl() {return pictureUrl;}
+    public String getDrawingUrl() {
+        return drawingUrl;
+    }
 
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
+    public void setDrawingUrl(String drawingUrl) {
+        this.drawingUrl = drawingUrl;
     }
 
     public long getCreatedAt() {

@@ -73,7 +73,7 @@ public class NoteActivity extends AppCompatActivity {
     Button Send;
     String title, agency, description;
     Uri URI = null;
-    private Uri DrawURL;
+    private Uri mDrawingUri;
     private Uri mImageUri;
 
     private static final int CAMERA_REQUEST_CODE = 10;
@@ -84,7 +84,7 @@ public class NoteActivity extends AppCompatActivity {
     private Bitmap mCameraImg;
     private Bitmap mDrawImg;
 
-    private boolean mHaveDrawing,mHaveImage;
+    private boolean mHaveDrawing, mHaveImage;
 
     private String mId;
     Spinner simpleSpinner;
@@ -159,12 +159,14 @@ public class NoteActivity extends AppCompatActivity {
                             mTVTitle.setText(mCurrentNoteModel.getTitle());
                             mTVDescription.setText(mCurrentNoteModel.getDescription());
 
-                            if (!mCurrentNoteModel.getImageUrl().isEmpty()) {
-                                Picasso.with(getApplicationContext()).load(mCurrentNoteModel.getImageUrl()).into(drawView);
-                                mHaveDrawing = true;
-                            }else if (!mCurrentNoteModel.getPictureUrl().isEmpty()){
-                                Picasso.with(getApplicationContext()).load(mCurrentNoteModel.getPictureUrl()).into(imageView);
-                                mHaveImage=true;
+                            // image
+                            if (mCurrentNoteModel.getImageUrl() != null) {
+                                Picasso.with(getApplicationContext()).load(mCurrentNoteModel.getImageUrl()).into(imageView);
+                            }
+
+                            // drawing
+                            if (mCurrentNoteModel.getDrawingUrl() != null){
+                                Picasso.with(getApplicationContext()).load(mCurrentNoteModel.getDrawingUrl()).into(drawView);
                             }
 
                         }
@@ -396,7 +398,7 @@ public class NoteActivity extends AppCompatActivity {
             switch (requestCode) {
                 case CAMERA_REQUEST_CODE:
                     getImageFromCamera(data);
-                    mHaveImage=true;
+                    mHaveImage = true;
                     break;
                 case SIGNATURE_REQUEST_CODE:
                     byte[] bytes = data.getByteArrayExtra("sign_image");
@@ -405,7 +407,7 @@ public class NoteActivity extends AppCompatActivity {
                         drawView.setImageBitmap(mDrawImg);
                     }
 
-                mHaveDrawing = true;
+                    mHaveDrawing = true;
                     break;
 
             }
@@ -425,7 +427,6 @@ public class NoteActivity extends AppCompatActivity {
             fo.close();
             mImageUri = Uri.fromFile(destination);
             imageView.setImageBitmap(mCameraImg);
-//            uploadRecepient();
 
         } catch (FileNotFoundException e) {
             Log.d("FileNotFoundException: ", e.getMessage());
@@ -439,98 +440,116 @@ public class NoteActivity extends AppCompatActivity {
      */
     private void save() {
 
-                // SIGNATURE
-                if (mDrawImg != null) {
-                    uploadDrawing();
-                }
+        if(mHaveDrawing || mHaveImage) {
 
-                // PICTURE
-               else if (mCameraImg != null){
-                   uploadImage();
-                }
+            if (mHaveDrawing && mDrawImg != null) {
+                uploadDrawing();
+            }
+
+            if (mHaveImage && mCameraImg != null) {
+                uploadImage();
+            }
+
+        } else {
+
+            // If there is not image need to be uploaded,
+            // skip the uploading process and jump to save record
+            saveToDB();
+        }
     }
-
 
     private void uploadDrawing() {
 
-        if (!mHaveDrawing) {
-            saveToDB("");
-        } else {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        mDrawImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            mDrawImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
+        OnSuccessListener successListener = new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                mDrawingUri = taskSnapshot.getDownloadUrl();
+                mHaveDrawing = false;
+                saveToDB();
+            }
+        };
 
-            OnSuccessListener successListener = new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    saveToDB(taskSnapshot.getDownloadUrl().toString());
-                }
-            };
+        OnFailureListener failureListener = new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
 
-            OnFailureListener failureListener = new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            };
-
-            mStorage
-                    .getReference("reference")
-                    .child(System.currentTimeMillis() + ".jpg")
-                    .putBytes(data)
-                    .addOnSuccessListener(successListener)
-                    .addOnFailureListener(failureListener);
-        }
+        mStorage
+                .getReference("reference")
+                .child(System.currentTimeMillis() + ".jpg")
+                .putBytes(data)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
     }
 
     private void uploadImage(){
 
-        if (!mHaveImage) {
-            savetoDB("");
-        } else {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            mCameraImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        mCameraImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-            OnSuccessListener successListener = new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    savetoDB(taskSnapshot.getDownloadUrl().toString());
+        OnSuccessListener successListener = new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                mImageUri = taskSnapshot.getDownloadUrl();
+                mHaveImage = false;
+                saveToDB();
 
-                }
-            };
-            OnFailureListener failureListener = new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            };
+            }
+        };
+        OnFailureListener failureListener = new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
 
-            mStorage
-                    .getReference("reference")
-                    .child(System.currentTimeMillis() + ".jpg")
-                    .putBytes(data)
-                    .addOnSuccessListener(successListener)
-                    .addOnFailureListener(failureListener);
-        }
-
+        mStorage
+                .getReference("reference")
+                .child(System.currentTimeMillis() + ".jpg")
+                .putBytes(data)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
     }
 
     /***
      * Save to Database
-     * @param imageUrl
      */
-    private void saveToDB(String imageUrl) {
+    private void saveToDB() {
 
-        NoteModel model = new NoteModel(
-                mTVTitle.getText().toString(),
-                simpleSpinner.getSelectedItem().toString(),
-                mTVDescription.getText().toString(),
-                imageUrl,
-                "",
-                System.currentTimeMillis()
-        );
+        // Image and drawing flag must be set to false before further by upload OnCompleteListener
+        // If not return
+        if(mHaveImage && mHaveDrawing) {
+            return;
+        }
+
+        // Build note model
+        NoteModel model;
+
+        if(mCurrentNoteModel == null) {
+            model = new NoteModel();
+            model.setCreatedAt(System.currentTimeMillis());
+        } else {
+            model = mCurrentNoteModel;
+        }
+
+        model.setTitle(mTVTitle.getText().toString());
+        model.setAgency(simpleSpinner.getSelectedItem().toString());
+        model.setDescription(mTVDescription.getText().toString());
+
+        if(mImageUri != null) {
+            model.setImageUrl(mImageUri.toString());
+        }
+
+        if(mDrawingUri != null) {
+            model.setDrawingUrl(mDrawingUri.toString());
+        }
 
         if (mId == null) {
             // generate id
@@ -546,34 +565,6 @@ public class NoteActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-    }
-
-    private void savetoDB(String drawUrl){
-
-        NoteModel model = new NoteModel(
-                mTVTitle.getText().toString(),
-                simpleSpinner.getSelectedItem().toString(),
-                mTVDescription.getText().toString(),
-                "",
-                drawUrl,
-                System.currentTimeMillis()
-        );
-
-        if (mId == null) {
-            // generate id
-            mId = mNoteReference.push().getKey();
-        }
-
-        mNoteReference.child(mId)
-                .setValue(model)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(NoteActivity.this, "Note saved", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-
     }
 }
 
