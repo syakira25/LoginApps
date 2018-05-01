@@ -10,21 +10,89 @@
     android:layout_marginStart="@dimen/standard_separator"
     android:layout_marginEnd="@dimen/standard_separator">
 
+    <ImageView
+        android:id="@+id/icon_agency"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_cityscape" />
+
     <EditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name Agency"
-        />
+        android:layout_below="@id/icon_agency"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Name Agency"/>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/et_name"
+        android:layout_marginTop="13dp"
+        android:src="@drawable/ic_school_material" />
+
 
     <EditText
         android:id="@+id/et_email"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/et_name"
-        android:scrollbars="vertical"
-        android:inputType="textMultiLine"
-        android:hint="Email Agency"
-        android:gravity="top"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Email Agency"/>
 
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_above="@+id/et_address"
+        android:layout_marginBottom="11dp"
+        android:src="@drawable/ic_email"
+        android:id="@+id/imageView2" />
+
+    <EditText
+        android:id="@+id/et_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/et_email"
+        android:layout_below="@+id/et_email"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Address Agency"
+        android:inputType="textMultiLine"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignStart="@+id/imageView2"
+        android:layout_alignTop="@+id/et_address"
+        android:layout_marginTop="13dp"
+        android:src="@drawable/ic_placeholder" />
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/et_address"
+        android:layout_below="@+id/et_address"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Phone Number"
+        android:inputType="number" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignStart="@+id/imageView"
+        android:layout_alignTop="@+id/et_phone"
+        android:layout_marginTop="11dp"
+        android:src="@drawable/ic_telephone_of_old_design" />
 </RelativeLayout>

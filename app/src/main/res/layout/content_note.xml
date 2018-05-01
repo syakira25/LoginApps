@@ -37,12 +37,33 @@
         app:layout_constraintTop_toBottomOf="@+id/et_agency"
         android:autofillHints="@string/spinner_title"/>
 
+    <TextView
+        android:id="@+id/tvItemSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/simple_spinner"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:hint="category"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btnOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvItemSelected"
+        android:layout_alignBottom="@+id/tvItemSelected"
+        android:layout_alignParentEnd="true"
+        android:text="@string/Category" />
+
     <EditText
         android:id="@+id/et_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/simple_spinner"
+        android:layout_below="@+id/tvItemSelected"
         android:layout_marginTop="20dp"
         android:gravity="top"
         android:hint="@string/hint_content"
@@ -86,7 +107,7 @@
         android:layout_height="150dp"
         android:layout_above="@+id/bt_send"
         android:layout_alignStart="@+id/bt_send"
-        android:layout_marginBottom="49dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/darker_gray" />
 
     <ImageView

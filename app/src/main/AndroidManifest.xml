@@ -28,6 +28,11 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".NoteDraw_Activity"
+            android:label="@string/title_activity_note"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".AgencyMain_Activity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
@@ -46,6 +51,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignatureActivity"/>
+        <activity android:name=".DrawActivity"/>
     </application>
 
 </manifest>

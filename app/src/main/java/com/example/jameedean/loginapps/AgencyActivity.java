@@ -23,6 +23,8 @@ public class AgencyActivity extends AppCompatActivity {
 
     private EditText mTVName;
     private EditText mTVEmail;
+    private EditText mTVAddress;
+    private EditText mTVPhone_num;
 
     private DatabaseReference mReference1;
 
@@ -50,6 +52,8 @@ public class AgencyActivity extends AppCompatActivity {
         // Binding
         mTVName = (EditText) findViewById(R.id.et_name);
         mTVEmail = (EditText) findViewById(R.id.et_email);
+        mTVAddress = (EditText) findViewById(R.id.et_address);
+        mTVPhone_num = (EditText) findViewById(R.id.et_phone);
 
         mReference1 = FirebaseDatabase.getInstance().getReference(mCurrentUser.getUid()).child(Reference.DB_AGENCY);
 
@@ -65,6 +69,8 @@ public class AgencyActivity extends AppCompatActivity {
                         if(model != null) {
                             mTVName.setText(model.getName());
                             mTVEmail.setText(model.getEmail());
+                            mTVAddress.setText(model.getAddress_agency());
+                            mTVPhone_num.setText(model.getPhone_num());
                         }
                     }
 
@@ -109,6 +115,8 @@ public class AgencyActivity extends AppCompatActivity {
                 AgencyModel model = new AgencyModel(
                         mTVName.getText().toString(),
                         mTVEmail.getText().toString(),
+                        mTVAddress.getText().toString(),
+                        mTVPhone_num.getText().toString(),
                         System.currentTimeMillis()
                 );
 

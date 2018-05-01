@@ -37,6 +37,16 @@
             android:layout_marginStart="23dp"
             android:layout_marginTop="30dp"
             android:text="Send" />
+        <Button
+            android:id="@+id/bt_clear"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_description"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="30dp"
+            android:text="Clear" />
+
     </LinearLayout>
 
 </RelativeLayout>

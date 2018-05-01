@@ -67,14 +67,18 @@ import java.util.List;
 public class NoteActivity extends AppCompatActivity {
 
     private EditText mTVTitle;
-    private TextView mTVAgency;
+    private TextView mTVAgency,mItemSelected;
     private EditText mTVDescription;
     private ImageView imageView, drawView;
-    Button Send;
+    Button Send, mOrder;
     String title, agency, description;
     Uri URI = null;
     private Uri mDrawingUri;
     private Uri mImageUri;
+
+    String[] listItems;
+    boolean[] checkedItems;
+    ArrayList<Integer> mUserItems = new ArrayList<>();
 
     private static final int CAMERA_REQUEST_CODE = 10;
     private static final int SIGNATURE_REQUEST_CODE = 11;
@@ -117,8 +121,76 @@ public class NoteActivity extends AppCompatActivity {
         // Binding
         mTVTitle = findViewById(R.id.et_title);
         mTVAgency = findViewById(R.id.et_agency);
+        mItemSelected = findViewById(R.id.tvItemSelected);
         mTVDescription = findViewById(R.id.et_description);
         Send = findViewById(R.id.bt_send);
+
+        mOrder = (Button) findViewById(R.id.btnOrder);
+        mItemSelected = (TextView) findViewById(R.id.tvItemSelected);
+
+        listItems = getResources().getStringArray(R.array.shopping_item);
+        checkedItems = new boolean[listItems.length];
+
+        mOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(NoteActivity.this);
+                mBuilder.setTitle(R.string.dialog_title);
+                mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+//                        if (isChecked) {
+//                            if (!mUserItems.contains(position)) {
+//                                mUserItems.add(position);
+//                            }
+//                        } else if (mUserItems.contains(position)) {
+//                            mUserItems.remove(position);
+//                        }
+                        if(isChecked){
+                            mUserItems.add(position);
+                        }else{
+                            mUserItems.remove((Integer.valueOf(position)));
+                        }
+                    }
+                });
+
+                mBuilder.setCancelable(false);
+                mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        String item = "";
+                        for (int i = 0; i < mUserItems.size(); i++) {
+                            item = item + listItems[mUserItems.get(i)];
+                            if (i != mUserItems.size() - 1) {
+                                item = item + ", ";
+                            }
+                        }
+                        mItemSelected.setText(item);
+                    }
+                });
+
+                mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            checkedItems[i] = false;
+                            mUserItems.clear();
+                            mItemSelected.setText("");
+                        }
+                    }
+                });
+
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
+            }
+        });
 
         drawView = findViewById(R.id.iv_draw);
         drawView.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +229,7 @@ public class NoteActivity extends AppCompatActivity {
                         mCurrentNoteModel = dataSnapshot.getValue(NoteModel.class);
                         if (mCurrentNoteModel != null) {
                             mTVTitle.setText(mCurrentNoteModel.getTitle());
+                            mItemSelected.setText(mCurrentNoteModel.getCategory());
                             mTVDescription.setText(mCurrentNoteModel.getDescription());
 
                             // image
@@ -299,13 +372,17 @@ public class NoteActivity extends AppCompatActivity {
             title = mTVTitle.getText().toString();
             agency = simpleSpinner.getSelectedItem().toString();
             description = mTVDescription.getText().toString();
-            final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-            emailIntent.setType("plain/text");
+            final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("image/png");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{agency});
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-            /*if (mImageUri != null) {
+            if (mImageUri != null) {
                 emailIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
-            }*/
+            }
+
+            if (mDrawingUri != null) {
+                emailIntent.putExtra(Intent.EXTRA_STREAM, mDrawingUri);
+            }
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, description);
             this.startActivity(Intent.createChooser(emailIntent, "Sending email..."));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -542,6 +619,7 @@ public class NoteActivity extends AppCompatActivity {
         model.setTitle(mTVTitle.getText().toString());
         model.setAgency(simpleSpinner.getSelectedItem().toString());
         model.setDescription(mTVDescription.getText().toString());
+        model.setCategory(mItemSelected.getText().toString());
 
         if(mImageUri != null) {
             model.setImageUrl(mImageUri.toString());

@@ -17,6 +17,19 @@
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
 
-    <string name="spinner_title">Select Category</string>
+    <string name="spinner_title">Select Agency</string>
+
+    <string name="Category">Make an order</string>
+    <string name="dialog_title">Items available in a shop</string>
+    <string name="ok_label">OK</string>
+    <string name="dismiss_label">Dismiss</string>
+    <string name="clear_all_label">Clear all</string>
+
+    <string-array name="category_item">
+        <item>Aduan</item>
+        <item>Cadangan</item>
+        <item>Pemohonan</item>
+        <item></item>
+    </string-array>
 
 </resources>
