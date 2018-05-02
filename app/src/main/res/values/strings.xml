@@ -19,8 +19,8 @@
 
     <string name="spinner_title">Select Agency</string>
 
-    <string name="Category">Make an order</string>
-    <string name="dialog_title">Items available in a shop</string>
+    <string name="Category">Category</string>
+    <string name="dialog_title">Select one category</string>
     <string name="ok_label">OK</string>
     <string name="dismiss_label">Dismiss</string>
     <string name="clear_all_label">Clear all</string>

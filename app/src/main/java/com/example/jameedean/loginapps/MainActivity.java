@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                Intent i = new Intent(MainActivity.this,SignatureActivity.class);
+                Intent i = new Intent(MainActivity.this,DrawActivity.class);
                 startActivityForResult(i, SIGNATURE_REQUEST_CODE);
 
             }

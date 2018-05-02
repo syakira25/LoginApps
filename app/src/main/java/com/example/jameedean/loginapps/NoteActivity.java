@@ -128,7 +128,7 @@ public class NoteActivity extends AppCompatActivity {
         mOrder = (Button) findViewById(R.id.btnOrder);
         mItemSelected = (TextView) findViewById(R.id.tvItemSelected);
 
-        listItems = getResources().getStringArray(R.array.shopping_item);
+        listItems = getResources().getStringArray(R.array.category_item);
         checkedItems = new boolean[listItems.length];
 
         mOrder.setOnClickListener(new View.OnClickListener() {

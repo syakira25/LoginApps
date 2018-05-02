@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jameedean.loginapps.SignatureActivity">
+    tools:context="com.example.jameedean.loginapps.DrawActivity">
 
     <kivaaz.com.signaturelibrary.Signature.Signature.SignatureView
         android:id="@+id/signatureview"
@@ -36,7 +36,7 @@
             android:layout_below="@+id/et_description"
             android:layout_marginStart="23dp"
             android:layout_marginTop="30dp"
-            android:text="Send" />
+            android:text="Save" />
         <Button
             android:id="@+id/bt_clear"
             android:layout_width="80dp"

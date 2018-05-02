@@ -30,7 +30,7 @@
         <activity
             android:name=".NoteDraw_Activity"
             android:label="@string/title_activity_note"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".DrawActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AgencyMain_Activity"
